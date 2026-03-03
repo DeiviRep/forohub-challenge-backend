@@ -1,4 +1,4 @@
-package com.alura.foro_hub.domain;
+package com.alura.foro_hub.domain.usuario;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,12 +11,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name = "curso")
-@Entity(name = "Curso")
+
+
+@Table(name = "usuario")
+@Entity(name = "Usuario")
 @Getter @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Curso {
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

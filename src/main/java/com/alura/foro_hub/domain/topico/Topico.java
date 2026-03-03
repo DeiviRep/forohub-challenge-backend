@@ -1,6 +1,10 @@
-package com.alura.foro_hub.domain;
+package com.alura.foro_hub.domain.topico;
 
 import java.time.LocalDateTime;
+
+import com.alura.foro_hub.domain.StatusTopico;
+import com.alura.foro_hub.domain.curso.Curso;
+import com.alura.foro_hub.domain.usuario.Usuario;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +19,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +30,7 @@ import lombok.Setter;
 @Entity(name = "Topico")
 @Getter @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Topico {
 

@@ -2,6 +2,9 @@ package com.alura.foro_hub.domain;
 
 import java.time.LocalDateTime;
 
+import com.alura.foro_hub.domain.topico.Topico;
+import com.alura.foro_hub.domain.usuario.Usuario;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

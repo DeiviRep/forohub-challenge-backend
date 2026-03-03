@@ -1,6 +1,9 @@
 package com.alura.foro_hub.domain.topico;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 import com.alura.foro_hub.domain.StatusTopico;
@@ -38,5 +41,19 @@ public class TopicoService {
         topicoDatos.setStatus(StatusTopico.ABIERTO);
         var topico = topicoRepository.save(topicoDatos);
         return topico;
+    }
+
+    public Page<DatosListTopico> listadoPage(String curso, Integer year, @PageableDefault(size = 10, sort = "fechaCreacion") Pageable pageable) {
+        Page<DatosListTopico> page;
+        if (curso != null && year != null) {
+            page = topicoRepository.findByCursoNombreAndYear(curso, year, pageable).map(DatosListTopico::new);
+        } else if (curso != null) {
+            page = topicoRepository.findByCurso_NombreIgnoreCase(curso, pageable).map(DatosListTopico::new);
+        } else if (year != null) {
+            page = topicoRepository.findByYear(year, pageable).map(DatosListTopico::new);
+        } else {
+            page = topicoRepository.findAll(pageable).map(DatosListTopico::new);
+        }
+        return page;
     }
 }

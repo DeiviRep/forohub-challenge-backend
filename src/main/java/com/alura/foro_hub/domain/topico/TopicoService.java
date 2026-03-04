@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -82,7 +81,7 @@ public class TopicoService {
         if (!topicoRepository.existsById(id)) {
             throw new ValidacionException("Tópico no encontrado.");
         }
-        if (topicoRepository.existsDuplicateOnUpdate(datos.titulo(), datos.mensaje(), id)) {
+        if (topicoRepository.existsByTituloIgnoreCaseAndMensajeIgnoreCaseAndIdNot(datos.titulo(), datos.mensaje(), id)) {
             throw new IllegalStateException("Tópico duplicado (título + mensaje ya existen).");
         }
         Topico topico =topicoRepository.findById(id).get();

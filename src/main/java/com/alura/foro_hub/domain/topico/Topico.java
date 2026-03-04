@@ -52,11 +52,11 @@ public class Topico {
     @Column(nullable = false, length = 20)
     private StatusTopico status;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "autor_id")
     private Usuario autor;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "curso_id")
     private Curso curso;
 

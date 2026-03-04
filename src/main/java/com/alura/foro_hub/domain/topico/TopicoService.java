@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.alura.foro_hub.domain.StatusTopico;
 import com.alura.foro_hub.domain.ValidacionException;
@@ -55,5 +57,13 @@ public class TopicoService {
             page = topicoRepository.findAll(pageable).map(DatosListTopico::new);
         }
         return page;
+    }
+
+    public DatosDetalleTopico detalle(Long id) {
+        if (!topicoRepository.existsById(id)) {
+            throw new ValidacionException("Topico no encontrado");
+        }
+        var topico = topicoRepository.findById(id).map(DatosDetalleTopico::new).get();
+        return topico;
     }
 }

@@ -28,13 +28,13 @@ public class TopicoService {
     private CursoRepository cursoRepository;
 
     public Topico crearTopico(DatosRegistroTopico datos){
-                if (!usuarioRepository.existsById(datos.autorId())) {
+        if (!usuarioRepository.existsById(datos.autorId())) {
             throw new ValidacionException("Autor no encontrado");
         }
-        if (!cursoRepository.existsById(datos.autorId())) {
+        if (!cursoRepository.existsById(datos.cursoId())) {
             throw new ValidacionException("Curso no encontrado");
         }
-        if (topicoRepository.existsByTituloIgnoreCaseAndMensajeIgnoreCase(datos.titulo(), datos.mensaje())) {
+        if (topicoRepository.existsDuplicateOnCreate(datos.titulo(), datos.mensaje())) {
             throw new ValidacionException("Tópico duplicado (título + mensaje ya existen).");
         }
         var autor = usuarioRepository.findById(datos.autorId()).get();
@@ -75,13 +75,13 @@ public class TopicoService {
         if (!usuarioRepository.existsById(datos.autorId())) {
             throw new ValidacionException("Autor no encontrado");
         }
-        if (!cursoRepository.existsById(datos.autorId())) {
+        if (!cursoRepository.existsById(datos.cursoId())) {
             throw new ValidacionException("Curso no encontrado");
         }
         if (!topicoRepository.existsById(id)) {
             throw new ValidacionException("Tópico no encontrado.");
         }
-        if (topicoRepository.existsByTituloIgnoreCaseAndMensajeIgnoreCaseAndIdNot(datos.titulo(), datos.mensaje(), id)) {
+        if (topicoRepository.existsDuplicateOnUpdate(datos.titulo(), datos.mensaje(), id)) {
             throw new IllegalStateException("Tópico duplicado (título + mensaje ya existen).");
         }
         Topico topico =topicoRepository.findById(id).get();

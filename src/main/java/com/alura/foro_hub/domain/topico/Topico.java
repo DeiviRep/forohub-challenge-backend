@@ -1,11 +1,15 @@
 package com.alura.foro_hub.domain.topico;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.alura.foro_hub.domain.Respuesta;
 import com.alura.foro_hub.domain.StatusTopico;
 import com.alura.foro_hub.domain.curso.Curso;
 import com.alura.foro_hub.domain.usuario.Usuario;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,6 +21,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -59,6 +64,11 @@ public class Topico {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "curso_id")
     private Curso curso;
+    
+    @OneToMany(mappedBy = "topico",
+           cascade = CascadeType.ALL,
+           orphanRemoval = true)
+    private List<Respuesta> respuestas = new ArrayList<>();
 
     @PrePersist
     void prePersist() {

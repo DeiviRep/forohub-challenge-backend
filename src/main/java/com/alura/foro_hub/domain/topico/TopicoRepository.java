@@ -24,13 +24,6 @@ public interface TopicoRepository extends JpaRepository<Topico, Long>{
            """)
     Page<Topico> findByYear(int year, Pageable pageable);
 
-    @Query("""
-           select case when count(t)>0 then true else false end
-           from Topico t
-           where lower(t.titulo) = lower(?1)
-             and lower(t.mensaje) = lower(?2)
-             and t.id <> ?3
-           """)
-    boolean existsDuplicateOnUpdate(String titulo, String mensaje, Long excludeId);
+    boolean existsByTituloIgnoreCaseAndMensajeIgnoreCaseAndIdNot(String titulo, String mensaje, Long id);
     
 }

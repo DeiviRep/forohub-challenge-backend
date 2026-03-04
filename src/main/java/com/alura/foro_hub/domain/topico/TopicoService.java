@@ -4,14 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.alura.foro_hub.domain.StatusTopico;
 import com.alura.foro_hub.domain.ValidacionException;
+import com.alura.foro_hub.domain.curso.Curso;
 import com.alura.foro_hub.domain.curso.CursoRepository;
+import com.alura.foro_hub.domain.usuario.Usuario;
 import com.alura.foro_hub.domain.usuario.UsuarioRepository;
+
+import jakarta.validation.Valid;
 
 @Service
 public class TopicoService {
@@ -65,5 +69,51 @@ public class TopicoService {
         }
         var topico = topicoRepository.findById(id).map(DatosDetalleTopico::new).get();
         return topico;
+    }
+    
+    public DatosDetalleTopico actualizar(@PathVariable Long id, @RequestBody @Valid DatosUpdateTopico datos) {
+        if (!usuarioRepository.existsById(datos.autorId())) {
+            throw new ValidacionException("Autor no encontrado");
+        }
+        if (!cursoRepository.existsById(datos.autorId())) {
+            throw new ValidacionException("Curso no encontrado");
+        }
+        if (!topicoRepository.existsById(id)) {
+            throw new ValidacionException("Tópico no encontrado.");
+        }
+        if (topicoRepository.existsDuplicateOnUpdate(datos.titulo(), datos.mensaje(), id)) {
+            throw new IllegalStateException("Tópico duplicado (título + mensaje ya existen).");
+        }
+        Topico topico =topicoRepository.findById(id).get();
+        
+        topico.setTitulo(datos.titulo());
+        topico.setMensaje(datos.mensaje());
+        
+        if (datos.status() != null && !datos.status().isBlank()) {
+            topico.setStatus(StatusTopico.valueOf(datos.status().toUpperCase()));
+        }
+        
+        if (datos.autorId() != null) {
+            Usuario autor = usuarioRepository.findById(datos.autorId()).get();
+            topico.setAutor(autor);
+        }
+        if (datos.cursoId() != null) {
+            Curso curso = cursoRepository.findById(datos.cursoId()).get();
+            topico.setCurso(curso);
+        }
+
+        topico = topicoRepository.save(topico);
+
+        var body = new DatosDetalleTopico(
+                topico.getId(),
+                topico.getTitulo(),
+                topico.getMensaje(),
+                topico.getFechaCreacion(),
+                topico.getStatus().name(),
+                topico.getAutor().getNombre(),
+                topico.getCurso().getNombre()
+        );
+
+        return body;
     }
 }

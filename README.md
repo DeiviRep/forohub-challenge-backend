@@ -1,128 +1,151 @@
-***
+# 📘 ForoHub API – Challenge ONE + Alura
 
-# 📘 README — ForoHub (Spring Boot + MySQL)
+API REST para la gestión de tópicos en un foro, desarrollada con **Java 17/24**, **Spring Boot 4**, **Spring Security**, **JPA/Hibernate**, **MySQL**, **Flyway**, **JWT** y **Swagger/OpenAPI**.
 
-ForoHub es una API REST construida con **Java 17**, **Spring Boot**, **Spring Data JPA**, **Flyway**, **MySQL** y **Spring Security (por defecto)**.  
-Permite gestionar tópicos similares a los de un foro (como Alura o StackOverflow).
-
-***
-
-## 🚀 Funcionalidades
-
-### ✔ Crear tópico (POST /topicos)
-
-*   Valida campos obligatorios.
-*   Verifica duplicados (mismo título + mensaje).
-*   Persiste autor, curso y fecha automática.
-
-### ✔ Listar tópicos (GET /topicos)
-
-*   Paginado y ordenado.
-*   Filtros opcionales:
-    *   por nombre de curso
-    *   por año
-    *   curso + año
-
-### ✔ Detalle de tópico (GET /topicos/{id})
-
-*   Devuelve título, mensaje, fecha, estado, autor y curso.
-
-### ✔ Actualizar tópico (PUT /topicos/{id})
-
-*   Cambia título, mensaje, estado.
-*   Valida duplicados.
-*   Verifica existencia.
-
-### ✔ Eliminar tópico (DELETE /topicos/{id})
-
-*   Manejo correcto de integridad referencial.
-*   Eliminación funcional del recurso.
+Este proyecto forma parte del desafío **ForoHub** del programa **Oracle Next Education (ONE) + Alura**, cuyo objetivo es construir una API completa con CRUD, autenticación y documentación.
 
 ***
 
-## 🗄️ Base de datos
+## 🚀 Funcionalidades principales
 
-La aplicación usa MySQL 8 y migraciones gestionadas por **Flyway**.
+### 🔐 Autenticación y Seguridad
 
-Tablas principales:
+*   Inicio de sesión con **JWT** (`/login`)
+*   Protección de endpoints
+*   Filtro JWT personalizado
+*   Usuarios almacenados en la tabla `usuario`
+*   Contraseñas cifradas con **BCrypt**
 
-*   `usuario`
-*   `curso`
-*   `topico`
-*   `respuesta`
+### 💬 Gestión de Tópicos (CRUD completo)
 
-Migraciones en:
+*   **Crear** tópico
+*   **Listar** tópicos (paginación + filtros opcionales)
+*   **Filtrar** por curso, año o ambos
+*   **Consultar detalle**
+*   **Editar**
+*   **Eliminar** (físico o lógico según implementación)
+*   Validación **anti-duplicados** (mismo título + mensaje)
 
-    src/main/resources/db/migration
+### 🧾 Migraciones automatizadas
 
-***
+*   Estructura de base de datos gestionada con **Flyway**
+*   Migraciones de:
+    *   Tablas del foro (`curso`, `usuario`, `topico`, `respuesta`)
+    *   Semillas de datos
+    *   Alta de credenciales (`login`, `clave`) con índice único
 
-## ▶️ Ejecución
+### 📑 Documentación de API (Swagger / OpenAPI)
 
-Compilar y ejecutar:
-
-```bash
-mvn clean package
-java -jar target/forohub-challenge-backend.jar
-```
-
-Swagger UI (si lo habilitas):
-
-    http://localhost:8080/swagger-ui/index.html
-
-***
-
-## 🧪 Pruebas con Insomnia/Postman
-
-Endpoints principales:
-
-*   `POST /topicos`
-*   `GET /topicos`
-*   `GET /topicos/{id}`
-*   `PUT /topicos/{id}`
-*   `DELETE /topicos/{id}`
+*   Disponible en `/swagger-ui/index.html`
+*   Generada automáticamente con **springdoc-openapi v3.x** (compatible con **Spring Boot 4**) [\[springdoc.org\]](https://springdoc.org/v4/), [\[github.com\]](https://github.com/springdoc/springdoc-openapi/releases)
 
 ***
 
-## 🔐 Seguridad
+## 🛠️ Tecnologías utilizadas
 
-La app levanta con **Spring Security por defecto**, usando contraseña generada automáticamente para usuario `user`.
-
-***
-
-## 💾 Tecnologías usadas
-
-*   Java 17
-*   Spring Boot 3 / 4
-*   Spring Web
-*   Spring Data JPA
-*   MySQL Driver
-*   Flyway
-*   Validation
-*   Spring Security
+| Tecnología                      | Descripción                                                                                                            |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| **Java 17/24**                  | Lenguaje principal                                                                                                     |
+| **Spring Boot 4.0.3**           | Framework principal para la API                                                                                        |
+| **Spring Web**                  | Controladores REST                                                                                                     |
+| **Spring Security**             | Seguridad + JWT                                                                                                        |
+| **Spring Data JPA (Hibernate)** | Persistencia                                                                                                           |
+| **Flyway**                      | Migraciones                                                                                                            |
+| **MySQL 8**                     | Base de datos                                                                                                          |
+| **Lombok**                      | Reducción de código boilerplate                                                                                        |
+| **springdoc-openapi 3.x**       | Documentación de API (compatible con Boot 4) [\[springdoc.org\]](https://springdoc.org/v4/) |
 
 ***
 
-## 📦 Estructura
+## 🗄️ Estructura del proyecto
 
     src/main/java/com.alura.foro_hub
      ├── controller
      ├── domain
+     │    ├── topico
+     │    ├── respuesta
+     │    ├── usuario
+     │    └── curso
+     ├── infra
+     │    └── security (JWT, filtros, config)
      ├── service
      └── repository
 
 ***
 
-## 📝 Notas
+## 🧬 Base de datos (modelo)
 
-Este proyecto forma parte del **Challenge ForoHub** del programa **Oracle Next Education (ONE) + Alura**.
+*   **usuario**
+    *   id, nombre, login (único), clave (BCrypt)
+
+*   **curso**
+    *   id, nombre, categoría
+
+*   **topico**
+    *   id, título, mensaje, fecha\_creación, status, autor\_id, curso\_id
+
+*   **respuesta**
+    *   id, mensaje, fecha, autor\_id, topico\_id
 
 ***
 
-## ✨ Commit sugerido
+## ▶️ Ejecución del proyecto
 
-Aquí tienes un commit **simple y corto** como pediste:
+### 1️⃣ Configura variables de entorno
 
-    docs: update README with CRUD and recent changes
+```bash
+SPRING_DATASOURCE_URL=jdbc:mysql://<HOST>:<PORT>/<DB>?sslMode=REQUIRED
+SPRING_DATASOURCE_USERNAME=<USER>
+SPRING_DATASOURCE_PASSWORD=<PASSWORD>
+API_SECURITY_TOKEN_SECRET=<SECRET_DE_32+_CARACTERES>
+```
+
+### 2️⃣ Ejecutar con Maven Wrapper (sin instalar Maven)
+
+```bash
+.\mvnw.cmd spring-boot:run
+```
 
 ***
+
+## 🧪 Endpoints principales
+
+### 🔐 Autenticación
+
+| Método | Endpoint | Descripción        |
+| ------ | -------- | ------------------ |
+| POST   | `/login` | Devuelve token JWT |
+
+### 💬 Tópicos
+
+| Método | Endpoint        | Descripción                        |
+| ------ | --------------- | ---------------------------------- |
+| POST   | `/topicos`      | Crea un tópico                     |
+| GET    | `/topicos`      | Lista tópicos (filtros opcionales) |
+| GET    | `/topicos/{id}` | Detalle                            |
+| PUT    | `/topicos/{id}` | Actualiza                          |
+| DELETE | `/topicos/{id}` | Elimina                            |
+
+***
+
+## 📚 Documentación de API (Swagger)
+
+Disponible automáticamente en:
+
+👉 **`http://localhost:8080/swagger-ui/index.html`**  
+👉 **`http://localhost:8080/v3/api-docs`**
+
+Soportado por **springdoc-openapi 3.x**, diseñado para **Spring Boot 4**.    [\[springdoc.org\]](https://springdoc.org/v4/)
+
+***
+
+## 👨‍💻 Autor
+
+**Patzi Vargas David Bernardo**  
+Desarrollador — Challenge ForoHub (ONE + Alura)
+
+***
+
+## 📝 Licencia
+
+Este proyecto se publica con fines educativos como parte del programa **Oracle Next Education (ONE)**.
